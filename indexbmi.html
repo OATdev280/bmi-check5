@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>BMI CHECK</title>
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",Arial,sans-serif;
+  background:#f3f3f3;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.card{
+  background:#fff;
+  width:460px;
+  padding:30px;
+  border-radius:22px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+}
+h1{text-align:center;letter-spacing:3px}
+.lang{text-align:right;margin-bottom:8px}
+.lang button{
+  background:#000;color:#fff;border:none;
+  padding:6px 10px;border-radius:8px;cursor:pointer;margin-left:4px
+}
+label{font-size:14px;color:#555}
+input{
+  width:100%;
+  padding:12px;
+  margin:6px 0 14px;
+  border-radius:12px;
+  border:1px solid #ccc;
+}
+button{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  margin-top:8px;
+  font-size:15px;
+}
+.main{background:#000;color:#fff}
+button:hover{opacity:.85}
+.result{text-align:center;font-size:20px;font-weight:bold;margin-top:10px}
+.status{text-align:center;margin-top:4px}
+.advice{text-align:center;margin-top:10px;font-size:14px;line-height:1.5}
+.meter{
+  margin-top:20px;
+  height:12px;
+  background:#ddd;
+  border-radius:10px;
+  overflow:hidden;
+}
+.meter-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#000,#666);
+  transition:width .5s ease
+}
+.scale{
+  display:flex;justify-content:space-between;font-size:11px;color:#666;margin-top:4px
+}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="lang">
+  <button onclick="setLang('th')">TH</button>
+  <button onclick="setLang('en')">EN</button>
+</div>
+
+<h1>BMI CHECK</h1>
+
+<label id="lblWeight">น้ำหนัก (กก.)</label>
+<input type="number" id="weight">
+
+<label id="lblHeight">ส่วนสูง (ซม.)</label>
+<input type="number" id="height">
+
+<button class="main" onclick="calcBMI()" id="btnCalc">ตรวจค่า BMI</button>
+
+<div class="result" id="result"></div>
+<div class="status" id="status"></div>
+<div class="advice" id="advice"></div>
+
+<div class="meter">
+  <div class="meter-fill" id="fill"></div>
+</div>
+<div class="scale">
+  <span>0</span><span>18.5</span><span>23</span><span>25</span><span>40</span>
+</div>
+
+</div>
+
+<script>
+let lang='th';
+const t={
+ th:{w:'น้ำหนัก (กก.)',h:'ส่วนสูง (ซม.)',btn:'ตรวจค่า BMI',st:'สถานะ',
+  u:'ผอม',n:'ปกติ',o:'ท้วม',ob:'อ้วน',
+  a1:'ควรเพิ่มน้ำหนัก รับประทานอาหารให้ครบ 5 หมู่ และพักผ่อนให้เพียงพอ',
+  a2:'สุขภาพดี ควรรักษาพฤติกรรมการกินและออกกำลังกายอย่างสม่ำเสมอ',
+  a3:'ควรควบคุมอาหาร ลดของหวานมัน และออกกำลังกายอย่างน้อย 3 วันต่อสัปดาห์',
+  a4:'ควรปรับพฤติกรรมสุขภาพอย่างจริงจัง ออกกำลังกายต่อเนื่อง และหลีกเลี่ยงอาหารแปรรูป'},
+ en:{w:'Weight (kg)',h:'Height (cm)',btn:'Check BMI',st:'Status',
+  u:'Underweight',n:'Normal',o:'Overweight',ob:'Obese',
+  a1:'Increase food intake and rest properly',
+  a2:'Healthy condition, maintain good habits',
+  a3:'Control diet and exercise regularly',
+  a4:'Improve lifestyle seriously and exercise consistently'}
+};
+
+function setLang(l){
+ lang=l;
+ lblWeight.innerText=t[l].w;
+ lblHeight.innerText=t[l].h;
+ btnCalc.innerText=t[l].btn;
+}
+
+function calcBMI(){
+ const w=weight.value,h=height.value;
+ if(!w||!h)return;
+ const bmi=w/((h/100)**2);
+ result.innerText='BMI = '+bmi.toFixed(2);
+ let status='',advice='';
+ if(bmi<18.5){status=t[lang].u;advice=t[lang].a1}
+ else if(bmi<23){status=t[lang].n;advice=t[lang].a2}
+ else if(bmi<25){status=t[lang].o;advice=t[lang].a3}
+ else{status=t[lang].ob;advice=t[lang].a4}
+ statusEl=document.getElementById('status');
+ statusEl.innerText=t[lang].st+': '+status;
+ adviceEl=document.getElementById('advice');
+ adviceEl.innerText=advice;
+ document.getElementById('fill').style.width=Math.min((bmi/40)*100,100)+'%';
+}
+</script>
+</body>
+</html>
